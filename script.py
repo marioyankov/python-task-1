@@ -52,5 +52,54 @@ def python_task():
     
     concat_data = pandas.concat(frames)
 
+    # color rows
+    def color_row(color, row):
+        return [f'background-color: {color}'] * len(row)
+
+    def make_rows_colored():
+        for index, row in concat_data.iterrows():
+        
+            if isinstance(row['hu'], str):
+                curr_date = datetime.datetime.strptime(row['hu'], format)
+                today = datetime.date.today()
+                difference_in_dates = relativedelta.relativedelta(today, curr_date)
+
+        
+                if difference_in_dates.months < 3:
+                    print('green #007500')
+                    color = '#007500'
+                    color_row(color, row)
+                
+                    # concat_data.style.apply(color_row, axis=1)
+                
+                elif difference_in_dates.months > 3 or difference_in_dates.months < 12:
+                    print('orange #FFA500')
+                    color = '#FFA500'
+                    color_row(color, row)
+                
+                    # concat_data.style.apply(color_row, axis=1)
+                
+                elif difference_in_dates.months > 12:
+                    print('red #b30000')
+                    color = '#b30000'
+                    color_row(color, row)
+
+                    # concat_data.style.apply(color_row, axis=1)
+                
+        concat_data.reset_index(drop=True).style.apply(color_row, axis=1)
+
+    if (colored == True) or (colored == "true"):
+        print('true')
+        make_rows_colored()
+
+    # sort by gruppe row
+    result = concat_data.sort_values(by='gruppe')
+
+    filtered_data = result[['gruppe', 'rnr', *keys]]
+
+    # filtered_data.reset_index(drop=True).style.apply(color_row, axis=1).to_excel(writer, sheet_name='welcome', index=False)
+    filtered_data.to_excel(writer, sheet_name='welcome', index=False)
+    writer.save()
+
 
 python_task()
